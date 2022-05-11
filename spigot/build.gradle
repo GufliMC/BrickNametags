@@ -1,5 +1,5 @@
 plugins {
-    id 'java-library'
+    id 'net.minecrell.plugin-yml.bukkit' version '0.5.1'
 }
 repositories {
     maven { url 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/' }
@@ -19,3 +19,15 @@ dependencies {
     implementation 'com.guflimc.brick.scheduler:spigot-api:1.0-SNAPSHOT'
     implementation 'net.kyori:adventure-text-serializer-gson:4.10.1'
 }
+
+bukkit {
+    name = rootProject.name
+    main = 'com.guflimc.brick.nametags.spigot.SpigotBrickNametags'
+    description = 'Simple and lightweight nametag library for mc 1.18+'
+    author = 'GufliMC'
+    website = 'https://github.com/GufliMC/BrickNametags'
+    softDepend = ['BrickPlaceholders']
+}
+
+// I want it nice like that
+generateBukkitPluginDescription.group = "minecraft"
