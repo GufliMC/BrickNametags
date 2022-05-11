@@ -1,5 +1,9 @@
 rootProject.name = 'BrickNametags'
 
 include 'api'
-include 'app'
+include 'common'
+include 'minestom-api'
+include 'minestom'
+include 'spigot-api'
+include 'spigot'
 

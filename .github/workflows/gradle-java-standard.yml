@@ -3,8 +3,6 @@ name: Gradle test, build and upload artifact
 on:
   push:
     branches: [main]
-  pull_request:
-    branches: [main]
 
 jobs:
   test:
@@ -24,3 +22,7 @@ jobs:
   pre-release:
     needs: test
     uses: MinestomBrick/.github/.github/workflows/java-gradle-github-release.yml@main
+    with:
+      files: |
+        minestom/build/libs/*.jar
+        spigot/build/libs/*.jar
