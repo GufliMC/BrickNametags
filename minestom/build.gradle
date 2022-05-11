@@ -1,9 +1,12 @@
+// TODO use dsl with gradle plugins repo
 buildscript {
     repositories {
+        mavenCentral()
         maven { url "https://repo.jorisg.com/snapshots" }
     }
     dependencies {
         classpath 'com.guflimc.minestom:extensionsetup:1.0-SNAPSHOT'
+        classpath 'com.google.code.gson:gson:2.9.0'
     }
 }
 

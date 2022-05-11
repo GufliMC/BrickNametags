@@ -4,18 +4,16 @@ A nametag/tablist extension for [Minestom](https://github.com/Minestom/Minestom)
 
 ## Install
 
-Get the [release](https://github.com/MinestomBrick/BrickNametags/releases)
+Get the [release](https://github.com/GufliMC/BrickNametags/releases)
 and place it in the extension folder of your minestom server.
 
 ### Dependencies
-* [BrickPlaceholders](https://github.com/MinestomBrick/BrickPlaceholders)
-* [BrickScheduler](https://github.com/MinestomBrick/BrickScheduler)
+* [BrickPlaceholders](https://github.com/MinestomBrick/BrickPlaceholders) (soft)
 
 ## Config
 
 You can change the settings in the `config.json`.
 
-You can remove and create chat channels.
 ```json
 {
   "prefix": "{rank}",
@@ -32,7 +30,11 @@ repositories {
 }
 
 dependencies {
-    implementation 'org.minestombrick.nametags:api:1.0-SNAPSHOT'
+    // minestom
+    compileOnly 'com.guflimc.brick.nametags:minestom-api:1.0-SNAPSHOT'
+    
+    // spigot
+    compileOnly 'com.guflimc.brick.nametags:spigot-api:1.0-SNAPSHOT'
 }
 ```
 
@@ -43,6 +45,6 @@ Check the [javadocs](https://minestombrick.github.io/BrickNametags/)
 #### Examples
 
 ```java
-NametagAPI.get().setNametag(player, Component.text("hey"), Component.text("oi"));
-NametagAPI.get().clear(player);
+SpigotNametagAPI.get().setNametag(player, Component.text("hey"), Component.text("oi"));
+SpigotNametagAPI.get().clear(player);
 ```

@@ -1,4 +1,4 @@
-name: Gradle test, build and upload artifact
+name: Gradle test, publish, javadoc and release
 
 on:
   push:
