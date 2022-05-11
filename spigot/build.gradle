@@ -12,10 +12,10 @@ dependencies {
     implementation project(':spigot-api')
 
     compileOnly 'org.spigotmc:spigot-api:1.18.2-R0.1-SNAPSHOT'
-
-    compileOnly 'com.guflimc.brick.placeholders:spigot-api:1.0-SNAPSHOT'
-    compileOnly 'com.guflimc.brick.scheduler:spigot-api:1.0-SNAPSHOT'
-
     compileOnly 'com.comphenix.protocol:ProtocolLib:4.7.0'
-    compileOnly 'net.kyori:adventure-text-serializer-gson:4.10.1'
+    compileOnly 'com.guflimc.brick.placeholders:spigot-api:1.0-SNAPSHOT'
+
+    // shade
+    implementation 'com.guflimc.brick.scheduler:spigot-api:1.0-SNAPSHOT'
+    implementation 'net.kyori:adventure-text-serializer-gson:4.10.1'
 }
