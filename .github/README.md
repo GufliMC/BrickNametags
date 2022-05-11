@@ -8,7 +8,7 @@ Get the [release](https://github.com/GufliMC/BrickNametags/releases)
 and place it in the extension folder of your minestom server.
 
 ### Dependencies
-* [BrickPlaceholders](https://github.com/MinestomBrick/BrickPlaceholders) (soft)
+* [BrickPlaceholders](https://github.com/GufliMC/BrickPlaceholders) (soft)
 
 ## Config
 
@@ -40,7 +40,7 @@ dependencies {
 
 ### Usage
 
-Check the [javadocs](https://minestombrick.github.io/BrickNametags/)
+Check the [javadocs](https://guflimc.github.io/BrickNametags/)
 
 #### Examples
 
