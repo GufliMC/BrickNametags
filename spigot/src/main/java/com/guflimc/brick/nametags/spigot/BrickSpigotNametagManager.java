@@ -4,8 +4,7 @@ import com.guflimc.brick.nametags.common.BrickNametag;
 import com.guflimc.brick.nametags.common.BrickNametagManager;
 import com.guflimc.brick.nametags.spigot.api.FakeTeam;
 import com.guflimc.brick.nametags.spigot.api.SpigotNametagManager;
-import com.guflimc.brick.nametags.spigot.team.AbstractFakeTeam;
-import com.guflimc.brick.nametags.spigot.team.FakeTeam_v1_17;
+import com.guflimc.brick.nametags.spigot.team.PacketFakeTeam;
 import com.guflimc.brick.placeholders.spigot.api.SpigotPlaceholderAPI;
 import com.guflimc.brick.scheduler.spigot.api.SpigotScheduler;
 import net.kyori.adventure.text.Component;
@@ -122,7 +121,7 @@ public class BrickSpigotNametagManager extends BrickNametagManager<Player> imple
 
     @Override
     public FakeTeam createFakeTeam(String id, Component prefix, Component suffix, NamedTextColor color) {
-        return new FakeTeam_v1_17(id, prefix, suffix, color);
+        return new PacketFakeTeam(id, prefix, suffix, color);
     }
 }
 
