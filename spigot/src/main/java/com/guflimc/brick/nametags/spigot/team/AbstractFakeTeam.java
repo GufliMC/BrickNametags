@@ -1,5 +1,6 @@
 package com.guflimc.brick.nametags.spigot.team;
 
+import com.guflimc.brick.nametags.spigot.api.FakeTeam;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.NamedTextColor;
 import org.bukkit.Bukkit;
@@ -8,7 +9,7 @@ import org.bukkit.entity.Player;
 import java.util.HashSet;
 import java.util.Set;
 
-public abstract class AbstractFakeTeam {
+public abstract class AbstractFakeTeam implements FakeTeam {
 
     private final Set<String> members = new HashSet<>();
     protected final Set<Player> viewers = new HashSet<>();
@@ -33,6 +34,10 @@ public abstract class AbstractFakeTeam {
         members.remove(player);
     }
 
+    public Set<String> members() {
+        return members;
+    }
+
     public void addServerViewers() {
         Bukkit.getOnlinePlayers().forEach(this::addViewer);
     }
@@ -48,12 +53,8 @@ public abstract class AbstractFakeTeam {
         viewers.remove(player);
     }
 
-    public void clear() {
+    public void removeAllViewers() {
         new HashSet<>(viewers).forEach(this::removeViewer);
-    }
-
-    public Set<String> getMembers() {
-        return members;
     }
 
     public String id() { return id; }
@@ -72,21 +73,14 @@ public abstract class AbstractFakeTeam {
 
     public void setPrefix(Component prefix) {
         this.prefix = prefix;
-        sendUpdate();
     }
 
     public void setSuffix(Component suffix) {
         this.suffix = suffix;
-        sendUpdate();
     }
 
     public void setColor(NamedTextColor color) {
         this.color = color;
-        sendUpdate();
     }
-
-    // PACKETS
-
-    protected abstract void sendUpdate();
 
 }

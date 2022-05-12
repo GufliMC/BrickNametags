@@ -43,6 +43,23 @@ public abstract class AbstractPacketFakeTeam extends AbstractFakeTeam {
         hide(player);
     }
 
+    public void setPrefix(Component prefix) {
+        super.setPrefix(prefix);
+        sendUpdate();
+    }
+
+    public void setSuffix(Component suffix) {
+        super.setSuffix(suffix);
+        sendUpdate();
+    }
+
+    public void setColor(NamedTextColor color) {
+        super.setColor(color);
+        sendUpdate();
+    }
+
+    // PACKETS
+
     private void hide(Player player) {
         PacketContainer packet = new PacketContainer(PacketType.Play.Server.SCOREBOARD_TEAM);
         packet.getIntegers().write(0, 1); // 1 = REMOVED
@@ -57,7 +74,7 @@ public abstract class AbstractPacketFakeTeam extends AbstractFakeTeam {
         fillValues(packet);
         send(receiver, packet);
 
-        sendAddPlayersToTeam(new ArrayList<>(getMembers()));
+        sendAddPlayersToTeam(new ArrayList<>(members()));
     }
 
     protected void sendAddPlayersToTeam(List<String> players) {
@@ -76,7 +93,6 @@ public abstract class AbstractPacketFakeTeam extends AbstractFakeTeam {
         send(packet);
     }
 
-    @Override
     protected void sendUpdate() {
         PacketContainer packet = new PacketContainer(PacketType.Play.Server.SCOREBOARD_TEAM);
         packet.getIntegers().write(0, 2); // 2 = TEAM_UPDATED

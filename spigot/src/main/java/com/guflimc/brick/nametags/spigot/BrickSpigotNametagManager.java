@@ -2,12 +2,14 @@ package com.guflimc.brick.nametags.spigot;
 
 import com.guflimc.brick.nametags.common.BrickNametag;
 import com.guflimc.brick.nametags.common.BrickNametagManager;
+import com.guflimc.brick.nametags.spigot.api.FakeTeam;
 import com.guflimc.brick.nametags.spigot.api.SpigotNametagManager;
 import com.guflimc.brick.nametags.spigot.team.AbstractFakeTeam;
 import com.guflimc.brick.nametags.spigot.team.FakeTeam_v1_17;
 import com.guflimc.brick.placeholders.spigot.api.SpigotPlaceholderAPI;
 import com.guflimc.brick.scheduler.spigot.api.SpigotScheduler;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.format.NamedTextColor;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -23,7 +25,7 @@ public class BrickSpigotNametagManager extends BrickNametagManager<Player> imple
     private final static String UNIQUEID = "BRNTGS";
     private long COUNTER = 0;
 
-    private final Set<AbstractFakeTeam> teams = new HashSet<>();
+    private final Set<FakeTeam> teams = new HashSet<>();
 
     BrickSpigotNametagManager(SpigotScheduler scheduler) {
         super();
@@ -52,7 +54,7 @@ public class BrickSpigotNametagManager extends BrickNametagManager<Player> imple
         String strSuffix = PLAIN_TEXT.serialize(prefix);
 
         // If player is already in the team -> ignore
-        AbstractFakeTeam previous = findTeam(player);
+        FakeTeam previous = findTeam(player);
         if (previous != null && checkSimilar(previous, strPrefix, strSuffix)) {
             return;
         }
@@ -65,7 +67,7 @@ public class BrickSpigotNametagManager extends BrickNametagManager<Player> imple
             return;
         }
 
-        AbstractFakeTeam team = findTeam(strPrefix, strSuffix);
+        FakeTeam team = findTeam(strPrefix, strSuffix);
         if (team != null) {
             // Team already exists
             team.addMember(player.getName());
@@ -74,13 +76,14 @@ public class BrickSpigotNametagManager extends BrickNametagManager<Player> imple
 
         // Team doesn't exist
         String name = UNIQUEID + (COUNTER++);
-        team = new FakeTeam_v1_17(name, prefix, suffix, nametag.nameColor());
+        team = createFakeTeam(name, prefix, suffix, nametag.nameColor());
         team.addMember(player.getName());
+        teams.add(team);
     }
 
     @Override
     protected void remove(Player player) {
-        AbstractFakeTeam team = findTeam(player);
+        FakeTeam team = findTeam(player);
         if (team == null) {
             return;
         }
@@ -88,25 +91,38 @@ public class BrickSpigotNametagManager extends BrickNametagManager<Player> imple
         team.removeMember(player.getName());
 
         // team is empty -> delete
-        if (team.getMembers().isEmpty()) {
-            team.clear();
+        if (team.members().isEmpty()) {
+            team.removeAllViewers();
             teams.remove(team);
         }
     }
 
     //
 
-    private boolean checkSimilar(AbstractFakeTeam team, String prefix, String suffix) {
+    private boolean checkSimilar(FakeTeam team, String prefix, String suffix) {
         return PLAIN_TEXT.serialize(team.prefix()).equals(prefix)
                 && PLAIN_TEXT.serialize(team.suffix()).equals(suffix);
     }
 
-    private AbstractFakeTeam findTeam(String prefix, String suffix) {
+    private FakeTeam findTeam(String prefix, String suffix) {
         return teams.stream().filter(t -> checkSimilar(t, prefix, suffix))
                 .findFirst().orElse(null);
     }
 
-    private AbstractFakeTeam findTeam(Player player) {
-        return teams.stream().filter(t -> t.getMembers().contains(player.getName())).findFirst().orElse(null);
+    private FakeTeam findTeam(Player player) {
+        return teams.stream().filter(t -> t.members().contains(player.getName())).findFirst().orElse(null);
+    }
+
+    // SPIGOT ONLY STUFF
+
+    @Override
+    public FakeTeam createFakeTeam(String id, Component prefix, Component suffix) {
+        return createFakeTeam(id, prefix, suffix, NamedTextColor.WHITE);
+    }
+
+    @Override
+    public FakeTeam createFakeTeam(String id, Component prefix, Component suffix, NamedTextColor color) {
+        return new FakeTeam_v1_17(id, prefix, suffix, color);
     }
 }
+
