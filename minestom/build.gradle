@@ -11,14 +11,21 @@ dependencies {
 }
 
 dependencies {
-    implementation project(':api')
-    implementation project(':common')
-    implementation project(':minestom-api')
-
+    // provided by platform
     compileOnly 'com.github.Minestom:Minestom:-SNAPSHOT'
 
+    // provided by extension
     compileOnly 'com.guflimc.brick.placeholders:minestom-api:+'
+
+    // libraries
     library 'com.guflimc.brick.scheduler:minestom-api:+'
+    library 'net.kyori:adventure-text-minimessage:4.+'
+    library 'net.kyori:adventure-text-serializer-plain:4.+'
+
+    // shadow - transitive -> don't include adventure dependency
+    implementation(project(':api')) { transitive false }
+    implementation(project(':common')) { transitive false }
+    implementation(project(':minestom-api')) { transitive false }
 }
 
 minestomExtension {
