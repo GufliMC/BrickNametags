@@ -12,20 +12,16 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 
 public class SpigotBrickNametags extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        getLogger().info("Enabling " + nameAndVersion() + ".");
-
-        // LOAD CONFIG
+        saveResource("config.json", false);
         JsonObject config;
         try (
-                InputStream is = getResource("config.json");
+                InputStream is = new FileInputStream(new File(getDataFolder(), "config.json"));
                 InputStreamReader isr = new InputStreamReader(is);
         ) {
             config = JsonParser.parseReader(isr).getAsJsonObject();
