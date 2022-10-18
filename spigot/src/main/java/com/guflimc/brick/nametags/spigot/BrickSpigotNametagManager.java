@@ -13,8 +13,8 @@ import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.TimeUnit;
 
 public class BrickSpigotNametagManager extends BrickNametagManager<Player> implements SpigotNametagManager {
@@ -24,12 +24,20 @@ public class BrickSpigotNametagManager extends BrickNametagManager<Player> imple
     private final static String UNIQUEID = "BRNTGS";
     private long COUNTER = 0;
 
-    private final Set<FakeTeam> teams = new HashSet<>();
+    private final Set<FakeTeam> teams = new CopyOnWriteArraySet<>();
 
     BrickSpigotNametagManager(SpigotScheduler scheduler) {
-        super();
         scheduler.asyncRepeating(() -> entities().forEach(this::refresh),
                 100, TimeUnit.MILLISECONDS);
+    }
+
+    public void join(Player player) {
+        teams.forEach(team -> team.addViewer(player));
+    }
+
+    public void quit(Player player) {
+        clear(player);
+        teams.forEach(team -> team.removeViewer(player));
     }
 
     @Override
@@ -38,6 +46,7 @@ public class BrickSpigotNametagManager extends BrickNametagManager<Player> imple
         if (nametag == null) {
             return;
         }
+
 
         Component prefix = nametag.prefix();
         if (Bukkit.getPluginManager().isPluginEnabled("BrickPlaceholders")) {
@@ -50,7 +59,7 @@ public class BrickSpigotNametagManager extends BrickNametagManager<Player> imple
         }
 
         String strPrefix = PLAIN_TEXT.serialize(prefix);
-        String strSuffix = PLAIN_TEXT.serialize(prefix);
+        String strSuffix = PLAIN_TEXT.serialize(suffix);
 
         // If player is already in the team -> ignore
         FakeTeam previous = findTeam(player);
@@ -76,6 +85,7 @@ public class BrickSpigotNametagManager extends BrickNametagManager<Player> imple
         // Team doesn't exist
         String name = UNIQUEID + (COUNTER++);
         team = createFakeTeam(name, prefix, suffix, nametag.nameColor());
+        team.addServerViewers();
         team.addMember(player.getName());
         teams.add(team);
     }

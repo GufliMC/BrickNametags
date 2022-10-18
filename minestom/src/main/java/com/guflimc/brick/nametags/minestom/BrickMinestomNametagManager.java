@@ -44,7 +44,7 @@ public class BrickMinestomNametagManager extends BrickNametagManager<Player> imp
         }
 
         String strPrefix = PLAIN_TEXT.serialize(prefix);
-        String strSuffix = PLAIN_TEXT.serialize(prefix);
+        String strSuffix = PLAIN_TEXT.serialize(suffix);
 
         // If player is already in the team -> ignore
         Team previous = findTeam(player);

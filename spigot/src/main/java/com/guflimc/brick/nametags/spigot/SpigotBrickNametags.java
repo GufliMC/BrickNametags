@@ -1,30 +1,29 @@
 package com.guflimc.brick.nametags.spigot;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.guflimc.brick.nametags.common.BrickNametagConfig;
 import com.guflimc.brick.nametags.spigot.api.SpigotNametagAPI;
+import com.guflimc.brick.nametags.spigot.listeners.JoinQuitListener;
 import com.guflimc.brick.scheduler.spigot.api.SpigotScheduler;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
 
 public class SpigotBrickNametags extends JavaPlugin {
 
+    private final static Gson gson = new GsonBuilder().create();
+
     @Override
     public void onEnable() {
         saveResource("config.json", false);
-        JsonObject config;
+
+        BrickNametagConfig config;
         try (
                 InputStream is = new FileInputStream(new File(getDataFolder(), "config.json"));
                 InputStreamReader isr = new InputStreamReader(is);
         ) {
-            config = JsonParser.parseReader(isr).getAsJsonObject();
+            config = gson.fromJson(isr, BrickNametagConfig.class);
         } catch (IOException e) {
             e.printStackTrace();
             return;
@@ -36,28 +35,7 @@ public class SpigotBrickNametags extends JavaPlugin {
         SpigotNametagAPI.setNametagManager(nametagManager);
 
         // default prefix and suffix
-        JsonElement prefix = config.get("prefix");
-        JsonElement suffix = config.get("suffix");
-        if ( (prefix != null && !prefix.getAsString().equals(""))
-                || (suffix != null && !suffix.getAsString().equals("")) ) {
-
-            getServer().getPluginManager().registerEvents(new Listener() {
-                @EventHandler
-                public void onJoin(PlayerJoinEvent event) {
-                    if ( prefix != null ) {
-                        nametagManager.setPrefix(event.getPlayer(), MiniMessage.miniMessage().deserialize(prefix.getAsString()));
-                    }
-                    if ( suffix != null ) {
-                        nametagManager.setSuffix(event.getPlayer(), MiniMessage.miniMessage().deserialize(suffix.getAsString()));
-                    }
-                }
-
-                @EventHandler
-                public void onQuit(PlayerQuitEvent event) {
-                    nametagManager.clear(event.getPlayer());
-                }
-            }, this);
-        }
+        getServer().getPluginManager().registerEvents(new JoinQuitListener(config, nametagManager), this);
 
         getLogger().info("Enabled " + nameAndVersion() + ".");
     }
