@@ -18,7 +18,6 @@ public abstract class BrickNametagManager<T> implements NametagManager<T> {
 
     @Override
     public final void setNametag(@NotNull T entity, @NotNull Component prefix, @NotNull Component suffix, @NotNull NamedTextColor nameColor) {
-        System.out.println("set nametag");
         BrickNametag nametag = new BrickNametag(prefix, suffix, nameColor);
         nametags.put(entity, nametag);
         refresh(entity);

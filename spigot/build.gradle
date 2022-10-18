@@ -34,6 +34,7 @@ bukkit {
     author = 'GufliMC'
     website = 'https://github.com/GufliMC/BrickNametags'
     softDepend = ['BrickPlaceholders']
+    depend = ['ProtocolLib']
     apiVersion = '1.18'
 }
 
