@@ -13,6 +13,7 @@ import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
+import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.TimeUnit;
@@ -47,7 +48,6 @@ public class BrickSpigotNametagManager extends BrickNametagManager<Player> imple
             return;
         }
 
-
         Component prefix = nametag.prefix();
         if (Bukkit.getPluginManager().isPluginEnabled("BrickPlaceholders")) {
             prefix = SpigotPlaceholderAPI.get().replace(player, prefix);
@@ -63,7 +63,7 @@ public class BrickSpigotNametagManager extends BrickNametagManager<Player> imple
 
         // If player is already in the team -> ignore
         FakeTeam previous = findTeam(player);
-        if (previous != null && checkSimilar(previous, strPrefix, strSuffix)) {
+        if (previous != null && checkSimilar(previous, prefix, suffix)) {
             return;
         }
 
@@ -75,7 +75,7 @@ public class BrickSpigotNametagManager extends BrickNametagManager<Player> imple
             return;
         }
 
-        FakeTeam team = findTeam(strPrefix, strSuffix);
+        FakeTeam team = findTeam(prefix, suffix);
         if (team != null) {
             // Team already exists
             team.addMember(player.getName());
@@ -108,12 +108,11 @@ public class BrickSpigotNametagManager extends BrickNametagManager<Player> imple
 
     //
 
-    private boolean checkSimilar(FakeTeam team, String prefix, String suffix) {
-        return PLAIN_TEXT.serialize(team.prefix()).equals(prefix)
-                && PLAIN_TEXT.serialize(team.suffix()).equals(suffix);
+    private boolean checkSimilar(FakeTeam team, Component prefix, Component suffix) {
+        return Objects.equals(team.prefix(), prefix) && Objects.equals(team.suffix(), suffix);
     }
 
-    private FakeTeam findTeam(String prefix, String suffix) {
+    private FakeTeam findTeam(Component prefix, Component suffix) {
         return teams.stream().filter(t -> checkSimilar(t, prefix, suffix))
                 .findFirst().orElse(null);
     }
